@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:workout/models/exercise_model.dart';
+import 'package:workout/models/exercise/exercise.dart';
 
 class NetworkManager {
   final url = 'https://wger.de/api/v2/';
@@ -15,11 +15,11 @@ class NetworkManager {
   static final NetworkManager instance = NetworkManager._();
   Dio get service => _dio;
 
-  Future<List<ExerciseResult>?> getExercises() async {
+  Future<List<ExerciseInfoResult>?> getExercises() async {
     final response = await _dio.get('exercise');
     if (response.statusCode == 200) {
       print(response.data);
-      return ExerciseModel.fromJson(response.data).results;
+      return ExerciseInfo.fromJson(response.data).results;
     } else {
       return null;
     }
