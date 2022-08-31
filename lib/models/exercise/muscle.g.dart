@@ -31,7 +31,8 @@ MuscleResult _$MuscleResultFromJson(Map<String, dynamic> json) => MuscleResult(
       imageUrlSecondary: json['imageUrlSecondary'] as String?,
     );
 
-Map<String, dynamic> _$MuscleResultToJson(MuscleResult instance) => <String, dynamic>{
+Map<String, dynamic> _$MuscleResultToJson(MuscleResult instance) =>
+    <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
       'nameEn': instance.nameEn,

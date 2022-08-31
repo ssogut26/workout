@@ -15,11 +15,10 @@ class NetworkManager {
   static final NetworkManager instance = NetworkManager._();
   Dio get service => _dio;
 
-  Future<List<ExerciseInfoResult>?> getExercises() async {
+  getExercises() async {
     final response = await _dio.get('exercise');
     if (response.statusCode == 200) {
-      print(response.data);
-      return ExerciseInfo.fromJson(response.data).results;
+      return Exercise.fromJson(response as Map<String, dynamic>);
     } else {
       return null;
     }

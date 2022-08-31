@@ -1,64 +1,61 @@
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:workout/models/excersize/category.dart';
-import 'package:workout/models/excersize/comment.dart';
-import 'package:workout/models/excersize/image.dart';
-import 'package:workout/models/excersize/language.dart';
-import 'package:workout/models/excersize/muscle.dart';
 
 part 'exercise.g.dart';
 
 @JsonSerializable()
-class ExerciseInfo {
-  int? count;
-  String? next;
-  dynamic previous;
-  List<ExerciseInfoResult>? results;
+class Exercise extends Equatable {
+  const Exercise({
+    required this.id,
+    required this.name,
+    required this.uuid,
+    required this.description,
+    required this.creationDate,
+    required this.category,
+    required this.muscles,
+    required this.musclesSecondary,
+    required this.equipment,
+    required this.language,
+    required this.license,
+    required this.licenseAuthor,
+    required this.variations,
+  });
 
-  ExerciseInfo({this.count, this.next, this.previous, this.results});
+  factory Exercise.fromJson(Map<String, dynamic> json) => _$ExerciseFromJson(json);
 
-  factory ExerciseInfo.fromJson(Map<String, dynamic> json) =>
-      _$ExerciseInfoFromJson(json);
+  Map<String, dynamic> toJson() => _$ExerciseToJson(this);
 
-  Map<String, dynamic> toJson() => _$ExerciseInfoToJson(this);
-}
+  final int id;
+  final String name;
+  final String uuid;
+  final String description;
+  @JsonKey(name: 'creation_date')
+  final String creationDate;
+  final int category;
+  final List<int> muscles;
+  @JsonKey(name: 'muscles_secondary')
+  final List<int> musclesSecondary;
+  final List<int> equipment;
+  final int language;
+  final int license;
+  @JsonKey(name: 'license_author')
+  final String licenseAuthor;
+  final List<int> variations;
 
-@JsonSerializable()
-class ExerciseInfoResult {
-  int? id;
-  String? name;
-  String? uuid;
-  int? exerciseBaseId;
-  String? description;
-  String? creationDate;
-  Category? category;
-  List<Muscle>? muscles;
-  List<Muscle>? muscles_secondary;
-  List? equipment;
-  Language? language;
-  List<Images>? images;
-  List? videos;
-  List<Comment>? comments;
-  List<int>? variations;
-
-  ExerciseInfoResult(
-      {this.id,
-      this.name,
-      this.uuid,
-      this.exerciseBaseId,
-      this.description,
-      this.creationDate,
-      this.category,
-      this.muscles,
-      this.muscles_secondary,
-      this.equipment,
-      this.language,
-      this.images,
-      this.videos,
-      this.comments,
-      this.variations});
-
-  factory ExerciseInfoResult.fromJson(Map<String, dynamic> json) =>
-      _$ExerciseInfoResultFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ExerciseInfoResultToJson(this);
+  @override
+  List<Object?> get props => [
+        id,
+        name,
+        uuid,
+        description,
+        creationDate,
+        category,
+        muscles,
+        musclesSecondary,
+        equipment,
+        language,
+        license,
+        licenseAuthor,
+        variations
+      ];
 }

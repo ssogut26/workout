@@ -1,30 +1,27 @@
-import 'package:json_annotation/json_annotation.dart';
+// import 'package:json_annotation/json_annotation.dart';
 
-part 'category.g.dart';
+// part 'category.g.dart';
 
-@JsonSerializable()
-class Category {
-  int? count;
-  String? next;
-  String? previous;
-  List<CategoryResult>? results;
+// @JsonSerializable()
+// class ExerciseCategory {
+//   @JsonKey(required: true)
+//   final int id;
 
-  Category({this.count, this.next, this.previous, this.results});
+//   @JsonKey(required: true)
+//   final String name;
 
-  factory Category.fromJson(Map<String, dynamic> json) => _$CategoryFromJson(json);
+//   const ExerciseCategory({
+//     required this.id,
+//     required this.name,
+//   });
 
-  Map<String, dynamic> toJson() => _$CategoryToJson(this);
-}
+//   @override
+//   String toString() {
+//     return 'Category $id';
+//   }
 
-@JsonSerializable()
-class CategoryResult {
-  int? id;
-  String? name;
-
-  CategoryResult({this.id, this.name});
-
-  factory CategoryResult.fromJson(Map<String, dynamic> json) =>
-      _$CategoryResultFromJson(json);
-
-  Map<String, dynamic> toJson() => _$CategoryResultToJson(this);
-}
+//   // Boilerplate
+//   factory ExerciseCategory.fromJson(Map<String, dynamic> json) =>
+//       _$ExerciseCategoryFromJson(json);
+//   Map<String, dynamic> toJson() => _$ExerciseCategoryToJson(this);
+// }
