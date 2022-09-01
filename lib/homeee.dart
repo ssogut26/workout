@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:workout/managers/network_manager.dart';
+import 'package:workout/models/exercise/exercises.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -10,21 +10,35 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late final exercises;
-  final _networkService = NetworkManager.instance;
+  late final Future<List<Exercises>?> exercises;
   int selectedIndex = 0;
   @override
   void initState() {
-    exercises = _networkService.getExercises();
+    exercises = NetworkManager.instance.getExercises();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('Home'),
-      ),
+    return Scaffold(
+      body: FutureBuilder<List<Exercises>?>(
+          future: exercises,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return ListView.builder(
+                itemCount: 1,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(snapshot.data?[index].name ?? ''),
+                  );
+                },
+              );
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          }),
     );
   }
 }

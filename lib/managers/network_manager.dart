@@ -1,11 +1,12 @@
 import 'package:dio/dio.dart';
-import 'package:workout/models/exercise/exercise.dart';
+import 'package:workout/models/exercise/exercises.dart';
 
 class NetworkManager {
-  final url = 'https://wger.de/api/v2/';
+  final url = 'https://api.api-ninjas.com/v1/';
   NetworkManager._() {
     _dio = Dio(
       BaseOptions(
+        headers: {'X-Api-Key': 'p1BE4b4C3ny/dyXSGvmkDA==95rq9sUkYKdPvmRg'},
         baseUrl: url,
       ),
     );
@@ -15,12 +16,16 @@ class NetworkManager {
   static final NetworkManager instance = NetworkManager._();
   Dio get service => _dio;
 
-  getExercises() async {
-    final response = await _dio.get('exercise');
+  Future<List<Exercises>?> getExercises() async {
+    final response = await _dio.getUri(Uri.parse('exercises'));
+    List<Exercises> exerciseList = [];
     if (response.statusCode == 200) {
-      return Exercise.fromJson(response as Map<String, dynamic>);
-    } else {
-      return null;
+      List<dynamic> data = (response.data);
+      // ignore: avoid_function_literals_in_foreach_calls
+      data.forEach((element) {
+        exerciseList.add(Exercises.fromJson(element));
+      });
     }
+    return exerciseList;
   }
 }
