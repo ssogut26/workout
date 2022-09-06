@@ -1,14 +1,16 @@
 import 'package:dio/dio.dart';
+import 'package:workout/homeee.dart';
 import 'package:workout/models/exercise/exercises.dart';
+import 'package:workout/utils/secret.dart';
 
 class NetworkManager {
-  final url = 'https://api.api-ninjas.com/v1/';
+  final url = 'https://exercisedb.p.rapidapi.com/';
   NetworkManager._() {
     _dio = Dio(
-      BaseOptions(
-        headers: {'X-Api-Key': 'p1BE4b4C3ny/dyXSGvmkDA==95rq9sUkYKdPvmRg'},
-        baseUrl: url,
-      ),
+      BaseOptions(headers: {
+        'X-RapidAPI-Key': ApiKeys.ApiKey,
+        'X-RapidAPI-Host': ApiKeys.ApiHost,
+      }, baseUrl: url),
     );
   }
   late final Dio _dio;
@@ -17,7 +19,8 @@ class NetworkManager {
   Dio get service => _dio;
 
   Future<List<Exercises>?> getExercises() async {
-    final response = await _dio.getUri(Uri.parse('exercises'));
+    final response = await _dio.getUri(Uri.parse('exercises?&limit=10'));
+    HomePage;
     List<Exercises> exerciseList = [];
     if (response.statusCode == 200) {
       List<dynamic> data = (response.data);
