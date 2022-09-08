@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:workout/body_part_list_view.dart';
+import 'package:workout/equipment_list_view.dart';
 import 'package:workout/managers/network_manager.dart';
 import 'package:workout/models/exercise/exercises.dart';
 
@@ -11,47 +13,141 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late final Future<List<Exercises>?> exercises;
-  int selectedIndex = 0;
-  final int _page = 0;
-  final int _perPage = 10;
+  late final Future<List> getCategories;
+  late final Future<List> getEquipments;
   bool isLoading = false;
-
-  late ScrollController controller;
+  var exerciseRepo = NetworkManager.instance;
   @override
   void initState() {
+    getEquipments = exerciseRepo.getListOfEquipment();
     exercises = NetworkManager.instance.getExercises();
+    getCategories = exerciseRepo.getCategories();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<List<Exercises>?>(
-          future: exercises,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return ListView.builder(
-                controller: controller,
-                itemCount: snapshot.data?.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(snapshot.data?[index].name ?? ''),
-                    // subtitle: Image.network(
-                    // snapshot.data?[index].gifUrl ?? '',
-                    // fit: BoxFit.cover,
-                    // ),
-                    subtitle: Text(snapshot.data?[index].bodyPart ?? ''),
-                    leading: Text(snapshot.data?[index].equipment ?? ''),
-                    trailing: Text(snapshot.data?[index].target ?? ''),
+      appBar: AppBar(),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'List by Body Parts',
+            style: TextStyle(fontSize: 20),
+          ),
+          FutureBuilder<List>(
+              future: getCategories,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return Expanded(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: snapshot.data?.length,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            Row(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => BodyPartListView(
+                                                    bodyPart: snapshot.data?[index],
+                                                  )));
+                                    });
+                                  },
+                                  child: Card(
+                                    child: (Column(
+                                      children: [
+                                        SizedBox(
+                                            height: 150,
+                                            width: 200,
+                                            child: Image.asset(
+                                                fit: BoxFit.fill,
+                                                'assets/images/bodyParts/${snapshot.data?[index]}.jpg')),
+                                        Text(snapshot.data?[index] ?? ''),
+                                      ],
+                                    )),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                   );
-                },
-              );
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          }),
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              }),
+          const Text(
+            'List by Equipment',
+            style: TextStyle(fontSize: 20),
+          ),
+          FutureBuilder<List>(
+            future: getEquipments,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return Expanded(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: snapshot.data?.length,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: [
+                          Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => EquipmentListView(
+                                                  equipment: snapshot.data?[index],
+                                                )));
+                                  });
+                                },
+                                child: Card(
+                                  child: (Column(
+                                    children: [
+                                      SizedBox(
+                                          height: 175,
+                                          width: 175,
+                                          child: Image.asset(
+                                              fit: BoxFit.fill,
+                                              'assets/images/equipments/${snapshot.data?[index]}.jpg')),
+                                      Text(snapshot.data?[index] ?? ''),
+                                    ],
+                                  )),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                );
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
+          ),
+          const Spacer(),
+        ],
+      ),
     );
   }
 
